@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -15,11 +16,13 @@ import java.net.URL;
 
 public class MainActivity extends AppCompatActivity {
     private static final String TAG = "MainActivity";
+    private TextView msgTV;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Button sendGetBtn = (Button) findViewById(R.id.send_get_btn);
+        msgTV = (TextView) findViewById(R.id.textView);
         sendGetBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -42,6 +45,7 @@ public class MainActivity extends AppCompatActivity {
                                         sb.append(line);
                                     }
                                     Log.d(TAG, "run: response : \n" + sb.toString());
+                                    updateUi(sb.toString());
                                 } catch (MalformedURLException e) {
                                     e.printStackTrace();
                                 } catch (IOException e) {
@@ -51,6 +55,15 @@ public class MainActivity extends AppCompatActivity {
                             }
                         }
                 ).start();
+            }
+        });
+    }
+
+    private void updateUi(final String msg) {
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                msgTV.setText(msgTV.getText() + "\n" + msg);
             }
         });
     }
